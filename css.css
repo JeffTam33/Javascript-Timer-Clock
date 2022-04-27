@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
+/*
+  Font-Family: Arimo, monospace
+*/
+
+body {
+  background-color: #613F75;
+}
+
+#clock-container {
+  background-color: #E5C3D1;
+  height: 400px;
+  width: 50%;
+  color: #FFFFFF;
+  margin: 1% 0% 0% 25%;
+  font-family: Arimo, monospace;
+  font-size: 30px;
+  text-align: center;
+}
+
+#title-wrapper {
+  background-color: #EF798A;
+  display: block;
+  margin: 0% 0% 0% 37%;
+  height: 40px;
+  width: 25%;
+  border-radius: 20px;
+}
+
+.length-wrapper {
+  background-color: #EF798A;
+  display: inline-block;
+  margin: 25px;
+  height: 125px; 
+  width: 250px;
+  border-radius: 20px;
+}
+
+#time-wrapper {
+  background-color: #7D82B8;
+  display: block;
+  height: 150px;
+  width: 400px;
+  margin-left: 28%;
+  border-radius: 20px;
+}
+
+button {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+}
