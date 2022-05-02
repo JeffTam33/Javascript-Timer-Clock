@@ -64,7 +64,6 @@ class App extends React.Component {
       this.setState({
         breakLength: this.state.breakLength - 1
       })
-      console.log("Decrease Break");
     }
   }
   increaseSession(){
@@ -74,7 +73,6 @@ class App extends React.Component {
         timerDefault: this.state.timerDefault + 60
       })
       this.convertToTime();
-      console.log("Increase Session"); 
     }
   }
   decreaseSession(){
@@ -84,14 +82,13 @@ class App extends React.Component {
         timerDefault: this.state.timerDefault - 60
       })
       this.convertToTime();
-      console.log("Decrease Session");
     }
   }
   stop(){
     this.setState({
-      stopTime: true
+      stopTime: true,
+      intervalID: clearInterval(this.state.intervalID)
     })
-    console.log(this.state.stopTime);
   }
   play(){
     this.setState({
@@ -100,13 +97,11 @@ class App extends React.Component {
         this.updateTimer();
       }, 1000)
     })
-    console.log(this.state.intervalID)
   }
   updateTimer(){
     this.setState({
       timerDefault: this.state.timerDefault - 1
     })
-    console.log(this.state.intervalID)
   }
   
   render(){
