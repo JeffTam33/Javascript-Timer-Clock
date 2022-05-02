@@ -30,7 +30,7 @@ class App extends React.Component {
     this.convertToTime = this.convertToTime.bind(this);
     this.resetTime = this.resetTime.bind(this);
     this.stop = this.stop.bind(this);
-    this.play = this.play.bind(this);
+    this.playTimer = this.playTimer.bind(this);
     this.increaseBreak = this.increaseBreak.bind(this);
     this.decreaseBreak = this.decreaseBreak.bind(this);
     this.increaseSession = this.increaseSession.bind(this);
@@ -90,7 +90,7 @@ class App extends React.Component {
       intervalID: clearInterval(this.state.intervalID)
     })
   }
-  play(){
+  playTimer(){
     this.setState({
       stopTime: false,
       intervalID: setInterval(() => {
@@ -133,7 +133,7 @@ class App extends React.Component {
       <div id="time-wrapper">
         <span id="timer-label">Time</span>
         <span id="time-left">{this.convertToTime()}</span>
-        <button id="play" onClick={this.play}>Play</button>
+        <button id="play" onClick={this.playTimer}>Play</button>
         <button id="start_stop" onClick={this.stop}>Pause</button>
         <button id="reset" onClick={this.resetTime}>Reset</button>
       </div>
