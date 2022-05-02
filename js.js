@@ -1,5 +1,6 @@
 //Libaries used React, ReactDOM
 
+
 class Length extends React.Component {
   constructor(props){
     super(props);
@@ -23,7 +24,8 @@ class App extends React.Component {
       breakLength: 5,
       sessionLength: 25,
       timerDefault: 1500,
-      stopTime: true
+      stopTime: true,
+      intervalID: ""
     };
     this.convertToTime = this.convertToTime.bind(this);
     this.resetTime = this.resetTime.bind(this);
@@ -94,15 +96,17 @@ class App extends React.Component {
   play(){
     this.setState({
       stopTime: false,
+      intervalID: setInterval(() => {
+        this.updateTimer();
+      }, 1000)
     })
-    this.updateTimer();
+    console.log(this.state.intervalID)
   }
   updateTimer(){
-    console.log("I'm the update timer");
     this.setState({
       timerDefault: this.state.timerDefault - 1
     })
-    this.convertToTime();
+    console.log(this.state.intervalID)
   }
   
   render(){
