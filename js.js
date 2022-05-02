@@ -48,7 +48,9 @@ class App extends React.Component {
       timerDefault: 1500,
       breakLength: 5,
       sessionLength: 25,
-      stopTime: true
+      stopTime: true,
+      breakTime: false,
+      intervalID: clearInterval(this.state.intervalID)
     })
   }
   increaseBreak(){
@@ -60,7 +62,7 @@ class App extends React.Component {
     }
   }
   decreaseBreak(){
-    if(this.state.breakLength > 0 && this.state.stopTime === true){
+    if(this.state.breakLength > 1 && this.state.stopTime === true){
       this.setState({
         breakLength: this.state.breakLength - 1
       })
@@ -76,7 +78,7 @@ class App extends React.Component {
     }
   }
   decreaseSession(){
-    if(this.state.sessionLength > 0 && this.state.stopTime === true){
+    if(this.state.sessionLength > 1 && this.state.stopTime === true){
       this.setState({
         sessionLength: this.state.sessionLength - 1,
         timerDefault: this.state.timerDefault - 60
@@ -99,11 +101,37 @@ class App extends React.Component {
     })
   }
   updateTimer(){
+    if(this.state.timerDefault === 0 && !this.state.breakTime){
+      document.getElementById("timer-label").textContent="Break";
+      this.playAlarm();
+      this.setBreakTime();
+    }else if(this.state.timerDefault === 0 && this.state.breakTime){
+      document.getElementById("timer-label").textContent="Session";
+      this.playAlarm();
+      this.setSessionTime();
+    }
     this.setState({
       timerDefault: this.state.timerDefault - 1
     })
   }
+  setSessionTime(){
+    this.setState({
+      breakTime: false,
+      timerDefault: this.state.sessionLength * 60
+    })
+  }
+  setBreakTime(){
+    this.setState({
+      breakTime: true,
+      timerDefault: this.state.breakLength * 60
+    })
+  }
   
+  playAlarm(){
+     var audio = new Audio("https://jeffreytambucket.s3.amazonaws.com/alarm-ring.wav");  
+     audio.type = 'audio/wav';
+     var playPromise = audio.play();
+  }
   render(){
     return(
       <div id="clock-container">
@@ -131,7 +159,7 @@ class App extends React.Component {
           lengthIncrementMethod={this.increaseSession}
         />
       <div id="time-wrapper">
-        <span id="timer-label">Time</span>
+        <span id="timer-label">Session</span>
         <span id="time-left">{this.convertToTime()}</span>
         <button id="play" onClick={this.playTimer}>Play</button>
         <button id="start_stop" onClick={this.stop}>Pause</button>
