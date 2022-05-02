@@ -25,6 +25,7 @@ class App extends React.Component {
       sessionLength: 25,
       timerDefault: 1500,
       stopTime: true,
+      activeTime: false,
       intervalID: ""
     };
     this.convertToTime = this.convertToTime.bind(this);
@@ -50,25 +51,26 @@ class App extends React.Component {
       sessionLength: 25,
       stopTime: true,
       breakTime: false,
+      activeTime: false,
       intervalID: clearInterval(this.state.intervalID)
     })
   }
   increaseBreak(){
-    if(this.state.stopTime === true && this.state.breakLength < 60){
+    if(this.state.stopTime && this.state.breakLength < 60 && !this.state.activeTime){
       this.setState({
         breakLength: this.state.breakLength + 1
       })
     }
   }
   decreaseBreak(){
-    if(this.state.breakLength > 1 && this.state.stopTime === true){
+    if(this.state.breakLength > 1 && this.state.stopTime && !this.state.activeTime){
       this.setState({
         breakLength: this.state.breakLength - 1
       })
     }
   }
   increaseSession(){
-    if(this.state.stopTime === true && this.state.sessionLength < 60){
+    if(this.state.stopTime === true && this.state.sessionLength < 60 && !this.state.activeTime){
       this.setState({
         sessionLength: this.state.sessionLength + 1,
         timerDefault: this.state.timerDefault + 60
@@ -77,7 +79,7 @@ class App extends React.Component {
     }
   }
   decreaseSession(){
-    if(this.state.sessionLength > 1 && this.state.stopTime === true){
+    if(this.state.sessionLength > 1 && this.state.stopTime && !this.state.activeTime){
       this.setState({
         sessionLength: this.state.sessionLength - 1,
         timerDefault: this.state.timerDefault - 60
@@ -94,6 +96,7 @@ class App extends React.Component {
   playTimer(){
     this.setState({
       stopTime: false,
+      activeTime: true,
       intervalID: setInterval(() => {
         this.updateTimer();
       }, 1000)
