@@ -54,11 +54,10 @@ class App extends React.Component {
     })
   }
   increaseBreak(){
-    if(this.state.stopTime === true){
+    if(this.state.stopTime === true && this.state.breakLength < 60){
       this.setState({
         breakLength: this.state.breakLength + 1
       })
-      console.log("Increase Break");
     }
   }
   decreaseBreak(){
@@ -69,7 +68,7 @@ class App extends React.Component {
     }
   }
   increaseSession(){
-    if(this.state.stopTime === true){
+    if(this.state.stopTime === true && this.state.sessionLength < 60){
       this.setState({
         sessionLength: this.state.sessionLength + 1,
         timerDefault: this.state.timerDefault + 60
@@ -105,10 +104,12 @@ class App extends React.Component {
       document.getElementById("timer-label").textContent="Break";
       this.playAlarm();
       this.setBreakTime();
+      this.stop();
     }else if(this.state.timerDefault === 0 && this.state.breakTime){
       document.getElementById("timer-label").textContent="Session";
       this.playAlarm();
       this.setSessionTime();
+      this.stop();
     }
     this.setState({
       timerDefault: this.state.timerDefault - 1
@@ -126,11 +127,8 @@ class App extends React.Component {
       timerDefault: this.state.breakLength * 60
     })
   }
-  
   playAlarm(){
-     var audio = new Audio("https://jeffreytambucket.s3.amazonaws.com/alarm-ring.wav");  
-     audio.type = 'audio/wav';
-     var playPromise = audio.play();
+    document.getElementById('beep').play();
   }
   render(){
     return(
@@ -158,13 +156,17 @@ class App extends React.Component {
           lengthDecrementMethod={this.decreaseSession}
           lengthIncrementMethod={this.increaseSession}
         />
-      <div id="time-wrapper">
-        <span id="timer-label">Session</span>
-        <span id="time-left">{this.convertToTime()}</span>
-        <button id="play" onClick={this.playTimer}>Play</button>
-        <button id="start_stop" onClick={this.stop}>Pause</button>
-        <button id="reset" onClick={this.resetTime}>Reset</button>
-      </div>
+        <div id="time-wrapper">
+          <span id="timer-label">Session</span>
+          <span id="time-left">{this.convertToTime()}</span>
+          <button id="play" onClick={this.playTimer}>Play</button>
+          <button id="start_stop" onClick={this.stop}>Pause</button>
+          <button id="reset" onClick={this.resetTime}>Reset</button>
+        </div>
+        <audio
+          id="beep"
+          src="https://jeffreytambucket.s3.amazonaws.com/alarm-ring.wav"
+        />
       </div>
     )
   }
