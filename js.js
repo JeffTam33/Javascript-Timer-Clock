@@ -1,6 +1,4 @@
 //Libaries used React, ReactDOM
-
-
 class Length extends React.Component {
   constructor(props){
     super(props);
@@ -94,13 +92,17 @@ class App extends React.Component {
     })
   }
   playTimer(){
-    this.setState({
-      stopTime: false,
-      activeTime: true,
-      intervalID: setInterval(() => {
-        this.updateTimer();
-      }, 1000)
-    })
+    if(!this.state.activeTime){
+      this.setState({
+        stopTime: false,
+        activeTime: true,
+        intervalID: setInterval(() => {
+          this.updateTimer();
+        }, 1000)
+      })
+    }else{
+      this.stop();
+    }
   }
   updateTimer(){
     if(this.state.timerDefault === 0 && !this.state.breakTime){
@@ -162,8 +164,7 @@ class App extends React.Component {
         <div id="time-wrapper">
           <span id="timer-label">Session</span>
           <span id="time-left">{this.convertToTime()}</span>
-          <button id="play" onClick={this.playTimer}>Play</button>
-          <button id="start_stop" onClick={this.stop}>Pause</button>
+          <button id="start_stop" onClick={this.playTimer}>Play</button>
           <button id="reset" onClick={this.resetTime}>Reset</button>
         </div>
         <audio
