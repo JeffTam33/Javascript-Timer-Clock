@@ -45,6 +45,7 @@ class App extends React.Component {
     return minute + ":" + second;
   }
   resetTime(){
+    this.stop();
     this.setState({
       timerDefault: 1500,
       breakLength: 5,
