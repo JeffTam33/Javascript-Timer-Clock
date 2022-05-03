@@ -1,4 +1,5 @@
-//Libaries used React, ReactDOM
+//Libaries used React, ReactDOM, fontawsome icon picker 2.0
+
 class Length extends React.Component {
   constructor(props){
     super(props);
@@ -7,9 +8,11 @@ class Length extends React.Component {
     return(
       <div class="length-wrapper">
         <span id={this.props.lengthNameId}>{this.props.lengthName}</span>
-        <button id={this.props.lengthDecrementName} onClick={this.props.lengthIncrementMethod}>Up</button>
-        <button id={this.props.lengthIncrementName} onClick={this.props.lengthDecrementMethod}>Down</button>
-        <span id={this.props.lengthId}>{this.props.length}</span>
+        <div>
+          <span id={this.props.lengthId}>{+this.props.length}</span>
+        </div>
+        <button id={this.props.lengthDecrementName} onClick={this.props.lengthIncrementMethod}>+</button>
+        <button id={this.props.lengthIncrementName} onClick={this.props.lengthDecrementMethod}>-</button>
       </div>
     )
   }
@@ -177,9 +180,11 @@ class App extends React.Component {
         />
         <div id="time-wrapper">
           <span id="timer-label">Session</span>
-          <span id="time-left">{this.convertToTime()}</span>
-          <button id="start_stop" onClick={this.playTimer}>Play</button>
-          <button id="reset" onClick={this.resetTime}>Reset</button>
+          <div>
+            <span id="time-left">{this.convertToTime()}</span>
+          </div>
+          <button id="start_stop" onClick={this.playTimer}><i className="fas fa-play"/></button>
+          <button id="reset" onClick={this.resetTime}><i className="fas fa-redo-alt" /></button>
         </div>
         <audio
           id="beep"
