@@ -19,11 +19,13 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      timerDefault: 1500,
       breakLength: 5,
       sessionLength: 25,
-      timerDefault: 1500,
       stopTime: true,
+      breakTime: false,
       activeTime: false,
+      timeEnded: false,
       intervalID: ""
     };
     this.convertToTime = this.convertToTime.bind(this);
@@ -51,8 +53,11 @@ class App extends React.Component {
       breakTime: false,
       activeTime: false,
       timeEnded: false,
-      intervalID: clearInterval(this.state.intervalID)
+      intervalID: ""
     })
+    document.getElementById('beep').pause();
+    document.getElementById('beep').currentTime = 0;
+    document.getElementById('timer-label').textContent="Session";
   }
   increaseBreak(){
     if(this.state.stopTime && this.state.breakLength < 60 && !this.state.activeTime){
@@ -178,6 +183,9 @@ class App extends React.Component {
         <audio
           id="beep"
           src="https://jeffreytambucket.s3.amazonaws.com/alarm-ring.wav"
+          ref={(audio) =>{
+            this.audioAlarm = audio;
+          }}
         />
       </div>
     )
