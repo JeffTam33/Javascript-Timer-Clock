@@ -50,6 +50,7 @@ class App extends React.Component {
       stopTime: true,
       breakTime: false,
       activeTime: false,
+      timeEnded: false,
       intervalID: clearInterval(this.state.intervalID)
     })
   }
@@ -105,28 +106,37 @@ class App extends React.Component {
     }
   }
   updateTimer(){
-    if(this.state.timerDefault === 0 && !this.state.breakTime){
-      document.getElementById("timer-label").textContent="Break";
-      this.playAlarm();
-      this.setBreakTime();
-    }else if(this.state.timerDefault === 0 && this.state.breakTime){
-      document.getElementById("timer-label").textContent="Session";
-      this.playAlarm();
-      this.setSessionTime();
+    if(this.state.timerDefault === 0 && !this.state.timeEnded){
+      this.setState({
+        timeEnded: true
+      })
+    }else if(this.state.timerDefault === 0 && this.state.timeEnded){
+      if(this.state.timerDefault === 0 && !this.state.breakTime){
+        document.getElementById("timer-label").textContent="Break";
+        this.playAlarm();
+        this.setBreakTime();
+      }else if(this.state.timerDefault === 0 && this.state.breakTime){
+        document.getElementById("timer-label").textContent="Session";
+        this.playAlarm();
+        this.setSessionTime();
+      }
+    }else{
+      this.setState({
+        timerDefault: this.state.timerDefault - 1
+      })
     }
-    this.setState({
-      timerDefault: this.state.timerDefault - 1
-    })
   }
   setSessionTime(){
     this.setState({
       breakTime: false,
+      timeEnded: false,
       timerDefault: this.state.sessionLength * 60
     })
   }
   setBreakTime(){
     this.setState({
       breakTime: true,
+      timeEnded: false,
       timerDefault: this.state.breakLength * 60
     })
   }
