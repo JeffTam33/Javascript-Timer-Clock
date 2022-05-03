@@ -109,12 +109,10 @@ class App extends React.Component {
       document.getElementById("timer-label").textContent="Break";
       this.playAlarm();
       this.setBreakTime();
-      this.stop();
     }else if(this.state.timerDefault === 0 && this.state.breakTime){
       document.getElementById("timer-label").textContent="Session";
       this.playAlarm();
       this.setSessionTime();
-      this.stop();
     }
     this.setState({
       timerDefault: this.state.timerDefault - 1
