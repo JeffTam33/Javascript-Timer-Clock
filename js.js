@@ -10,8 +10,8 @@ class Length extends React.Component {
         <div>
           <span id={this.props.lengthId}>{+this.props.length}</span>
         </div>
-        <button id={this.props.lengthDecrementName} onClick={this.props.lengthIncrementMethod}>+</button>
-        <button id={this.props.lengthIncrementName} onClick={this.props.lengthDecrementMethod}>-</button>
+        <button id={this.props.lengthIncrementName} onClick={this.props.lengthMethod} value="add">+</button>
+        <button id={this.props.lengthDecrementName} onClick={this.props.lengthMethod} value="sub">-</button>
       </div>
     )
   }
@@ -29,10 +29,9 @@ class App extends React.Component {
       timerType: "Session",
       intervalID: ""
     };
-    this.increaseBreak = this.increaseBreak.bind(this);
-    this.increaseSession = this.increaseSession.bind(this);
-    this.decreaseBreak = this.decreaseBreak.bind(this);
-    this.decreaseSession = this.decreaseSession.bind(this);
+    this.breakManager = this.breakManager.bind(this);
+    this.sessionManager = this.sessionManager.bind(this);
+    this.lengthManager = this.lengthManager.bind(this);
     
     this.convertToTime = this.convertToTime.bind(this);
     this.resetTime = this.resetTime.bind(this);
@@ -65,49 +64,34 @@ class App extends React.Component {
     document.getElementById('beep').pause();
     document.getElementById('beep').currentTime = 0;
   }
-  increaseBreak(){
-    if(!this.state.stopTime){
-      return;
-    }
-    if(this.state.stopTime && this.state.breakLength < 60){
-      this.setState({
-        breakLength: this.state.breakLength + 1
-      })
+  
+  breakManager(e){
+    if(this.state.stopTime && this.state.intervalID === ""){
+      this.lengthManager(e.target.value, "break"); 
     }
   }
-  decreaseBreak(){
-    if(!this.state.stopTime){
-      return;
-    }
-    if(this.state.stopTime && this.state.breakLength > 1){
-      this.setState({
-        breakLength: this.state.breakLength - 1
-      })
+  
+  sessionManager(e){
+    if(this.state.stopTime && this.state.intervalID === ""){
+      this.lengthManager(e.target.value, "session"); 
     }
   }
-  increaseSession(){
-    if(!this.state.stopTime){
-      return;
+  
+  lengthManager(action, name){
+    if(name === "break"){
+      if(action === "add" && this.state.breakLength < 60){
+        this.setState({breakLength: this.state.breakLength + 1})
+      }else if(action == "sub" && this.state.breakLength > 1){
+        this.setState({breakLength: this.state.breakLength - 1})
+      }
+    }else if(name === "session"){
+      if(action === "add" && this.state.sessionLength < 60){
+        this.setState({sessionLength: this.state.sessionLength + 1, timerDefault: this.state.timerDefault + 60})
+      }else if(action == "sub" && this.state.sessionLength > 1){
+        this.setState({sessionLength: this.state.sessionLength - 1, timerDefault: this.state.timerDefault - 60})
+      }
     }
-    if(this.state.stopTime && this.state.sessionLength < 60){
-      this.setState({
-        sessionLength: this.state.sessionLength + 1,
-        timerDefault: this.state.timerDefault + 60
-      })
-      this.convertToTime();
-    }
-  }
-  decreaseSession(){
-    if(!this.state.stopTime){
-      return;
-    }
-    if(this.state.stopTime && this.state.sessionLength > 1){
-      this.setState({
-        sessionLength: this.state.sessionLength - 1,
-        timerDefault: this.state.timerDefault - 60
-      })
-      this.convertToTime();
-    }
+    
   }
   playTimer(){
     if(this.state.stopTime){
@@ -179,8 +163,7 @@ class App extends React.Component {
           lengthId="break-length"
           lengthDecrementName="break-decrement"
           lengthIncrementName="break-increment"
-          lengthDecrementMethod={this.decreaseBreak}
-          lengthIncrementMethod={this.increaseBreak}
+          lengthMethod={this.breakManager}
         />
        <Length
           lengthName="Session Length"
@@ -189,8 +172,7 @@ class App extends React.Component {
           lengthId="session-length"
           lengthDecrementName="session-decrement"
           lengthIncrementName="session-increment"
-          lengthDecrementMethod={this.decreaseSession}
-          lengthIncrementMethod={this.increaseSession}
+          lengthMethod={this.sessionManager}
         />
         <div id="time-wrapper">
           <span id="timer-label">{this.state.timerType}</span>
