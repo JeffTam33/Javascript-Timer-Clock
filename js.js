@@ -1,5 +1,4 @@
 //Libaries used React, ReactDOM, fontawsome icon picker 2.0
-
 class Length extends React.Component {
   constructor(props){
     super(props);
@@ -27,18 +26,17 @@ class App extends React.Component {
       sessionLength: 25,
       stopTime: true,
       breakTime: false,
-      activeTime: false,
-      timeEnded: false,
+      timerType: "Session",
       intervalID: ""
     };
+    this.increaseBreak = this.increaseBreak.bind(this);
+    this.increaseSession = this.increaseSession.bind(this);
+    this.decreaseBreak = this.decreaseBreak.bind(this);
+    this.decreaseSession = this.decreaseSession.bind(this);
+    
     this.convertToTime = this.convertToTime.bind(this);
     this.resetTime = this.resetTime.bind(this);
-    this.stop = this.stop.bind(this);
     this.playTimer = this.playTimer.bind(this);
-    this.increaseBreak = this.increaseBreak.bind(this);
-    this.decreaseBreak = this.decreaseBreak.bind(this);
-    this.increaseSession = this.increaseSession.bind(this);
-    this.decreaseSession = this.decreaseSession.bind(this);
     this.updateTimer = this.updateTimer.bind(this);
     this.setSessionTime = this.setSessionTime.bind(this);
     this.setBreakTime = this.setBreakTime.bind(this);
@@ -52,37 +50,46 @@ class App extends React.Component {
     return minute + ":" + second;
   }
   resetTime(){
-    this.stop();
     this.setState({
       timerDefault: 1500,
       breakLength: 5,
       sessionLength: 25,
       stopTime: true,
       breakTime: false,
-      activeTime: false,
-      timeEnded: false,
+      timerType: "Session",
       intervalID: ""
     })
+    if(this.state.intervalID){
+      clearInterval(this.state.intervalID);
+    }
     document.getElementById('beep').pause();
     document.getElementById('beep').currentTime = 0;
-    document.getElementById('timer-label').textContent="Session";
   }
   increaseBreak(){
-    if(this.state.stopTime && this.state.breakLength < 60 && !this.state.activeTime){
+    if(!this.state.stopTime){
+      return;
+    }
+    if(this.state.stopTime && this.state.breakLength < 60){
       this.setState({
         breakLength: this.state.breakLength + 1
       })
     }
   }
   decreaseBreak(){
-    if(this.state.breakLength > 1 && this.state.stopTime && !this.state.activeTime){
+    if(!this.state.stopTime){
+      return;
+    }
+    if(this.state.stopTime && this.state.breakLength > 1){
       this.setState({
         breakLength: this.state.breakLength - 1
       })
     }
   }
   increaseSession(){
-    if(this.state.stopTime === true && this.state.sessionLength < 60 && !this.state.activeTime){
+    if(!this.state.stopTime){
+      return;
+    }
+    if(this.state.stopTime && this.state.sessionLength < 60){
       this.setState({
         sessionLength: this.state.sessionLength + 1,
         timerDefault: this.state.timerDefault + 60
@@ -91,7 +98,10 @@ class App extends React.Component {
     }
   }
   decreaseSession(){
-    if(this.state.sessionLength > 1 && this.state.stopTime && !this.state.activeTime){
+    if(!this.state.stopTime){
+      return;
+    }
+    if(this.state.stopTime && this.state.sessionLength > 1){
       this.setState({
         sessionLength: this.state.sessionLength - 1,
         timerDefault: this.state.timerDefault - 60
@@ -99,23 +109,19 @@ class App extends React.Component {
       this.convertToTime();
     }
   }
-  stop(){
-    this.setState({
-      stopTime: true,
-      intervalID: clearInterval(this.state.intervalID)
-    })
-  }
   playTimer(){
-    if(!this.state.activeTime){
+    if(this.state.stopTime){
       this.setState({
         stopTime: false,
-        activeTime: true,
         intervalID: setInterval(() => {
           this.updateTimer();
         }, 1000)
       })
     }else{
-      this.stop();
+      this.setState({
+        stopTime: true,
+        intervalID: clearInterval(this.state.intervalID)
+      })
     }
   }
   updateTimer(){
@@ -125,11 +131,15 @@ class App extends React.Component {
       })
     }else if(this.state.timerDefault === 0 && this.state.timeEnded){
       if(this.state.timerDefault === 0 && !this.state.breakTime){
-        document.getElementById("timer-label").textContent="Break";
+        this.setState({
+          timerType: "Break"
+        })
         this.playAlarm();
         this.setBreakTime();
       }else if(this.state.timerDefault === 0 && this.state.breakTime){
-        document.getElementById("timer-label").textContent="Session";
+        this.setState({
+          timerType: "Session"
+        })        
         this.playAlarm();
         this.setSessionTime();
       }
@@ -183,7 +193,7 @@ class App extends React.Component {
           lengthIncrementMethod={this.increaseSession}
         />
         <div id="time-wrapper">
-          <span id="timer-label">Session</span>
+          <span id="timer-label">{this.state.timerType}</span>
           <div>
             <span id="time-left">{this.convertToTime()}</span>
           </div>
