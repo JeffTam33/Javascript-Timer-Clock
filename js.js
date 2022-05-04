@@ -39,6 +39,10 @@ class App extends React.Component {
     this.decreaseBreak = this.decreaseBreak.bind(this);
     this.increaseSession = this.increaseSession.bind(this);
     this.decreaseSession = this.decreaseSession.bind(this);
+    this.updateTimer = this.updateTimer.bind(this);
+    this.setSessionTime = this.setSessionTime.bind(this);
+    this.setBreakTime = this.setBreakTime.bind(this);
+    this.playAlarm = this.playAlarm.bind(this);
   }
   convertToTime(){
     let minute = Math.floor(this.state.timerDefault / 60);
